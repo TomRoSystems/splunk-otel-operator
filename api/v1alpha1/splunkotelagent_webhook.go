@@ -29,9 +29,9 @@ import (
 )
 
 const (
-	kindAgent           string = "agent"
-	kindClusterReceiver string = "cluster-receiver"
-	kindGateway         string = "gateway"
+	KindAgent           string = "agent"
+	KindClusterReceiver string = "cluster-receiver"
+	KindGateway         string = "gateway"
 )
 
 // log is for logging in this package.

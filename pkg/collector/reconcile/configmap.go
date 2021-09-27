@@ -28,6 +28,8 @@ import (
 
 	"github.com/signalfx/splunk-otel-operator/pkg/collector"
 	"github.com/signalfx/splunk-otel-operator/pkg/naming"
+
+	"github.com/signalfx/splunk-otel-operator/api/v1alpha1"
 )
 
 // +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch;delete
@@ -37,21 +39,21 @@ func ConfigMaps(ctx context.Context, params Params) error {
 	desired := []corev1.ConfigMap{}
 
 	if !params.Instance.Spec.Agent.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Agent.Config, "agent"); err == nil {
+		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Agent.Config, v1alpha1.KindAgent); err == nil {
 			desired = append(desired, cm)
 		} else {
 			return err
 		}
 	}
 	if !params.Instance.Spec.ClusterReceiver.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.ClusterReceiver.Config, "cluster-receiver"); err == nil {
+		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.ClusterReceiver.Config, v1alpha1.KindClusterReceiver); err == nil {
 			desired = append(desired, cm)
 		} else {
 			return err
 		}
 	}
 	if !params.Instance.Spec.Gateway.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Gateway.Config, "gateway"); err == nil {
+		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Gateway.Config, v1alpha1.KindGateway); err == nil {
 			desired = append(desired, cm)
 		} else {
 			return err
