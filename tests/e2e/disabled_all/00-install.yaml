@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: splunk-access-token
+type: Opaque
+data:
+  access-token: MDEyMzQ1Njc4OS0tMTIzNDU2Ny0xMg==
