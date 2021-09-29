@@ -91,15 +91,15 @@ func (r *SplunkOtelAgent) ValidateDelete() error {
 
 func (r *SplunkOtelAgent) validateCRDSpec() error {
 	var errs []string
-	if err := r.ValidateCRDAgentSpec(); err != nil {
+	if err := r.validateCRDAgentSpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 
-	if err := r.ValidateCRDClusterReceiverSpec(); err != nil {
+	if err := r.validateCRDClusterReceiverSpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 
-	if err := r.ValidateCRDGatewaySpec(); err != nil {
+	if err := r.validateCRDGatewaySpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 	if len(errs) > 0 {
@@ -108,7 +108,7 @@ func (r *SplunkOtelAgent) validateCRDSpec() error {
 	return nil
 }
 
-func (r *SplunkOtelAgent) ValidateCRDAgentSpec() error {
+func (r *SplunkOtelAgent) validateCRDAgentSpec() error {
 	spec := r.Spec.Agent
 
 	if spec.Replicas != nil {
@@ -118,7 +118,7 @@ func (r *SplunkOtelAgent) ValidateCRDAgentSpec() error {
 	return nil
 }
 
-func (r *SplunkOtelAgent) ValidateCRDClusterReceiverSpec() error {
+func (r *SplunkOtelAgent) validateCRDClusterReceiverSpec() error {
 	spec := r.Spec.ClusterReceiver
 
 	if spec.Replicas != nil {
@@ -132,7 +132,7 @@ func (r *SplunkOtelAgent) ValidateCRDClusterReceiverSpec() error {
 	return nil
 }
 
-func (r *SplunkOtelAgent) ValidateCRDGatewaySpec() error {
+func (r *SplunkOtelAgent) validateCRDGatewaySpec() error {
 	spec := r.Spec.Gateway
 
 	if !r.Spec.Gateway.Disabled {
