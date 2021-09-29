@@ -91,15 +91,15 @@ func (r *SplunkOtelAgent) ValidateDelete() error {
 
 func (r *SplunkOtelAgent) validateCRDSpec() error {
 	var errs []string
-	if err := r.validateCRDAgentSpec(); err != nil {
+	if err := r.ValidateCRDAgentSpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 
-	if err := r.validateCRDClusterReceiverSpec(); err != nil {
+	if err := r.ValidateCRDClusterReceiverSpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 
-	if err := r.validateCRDGatewaySpec(); err != nil {
+	if err := r.ValidateCRDGatewaySpec(); err != nil {
 		errs = append(errs, err.Error())
 	}
 	if len(errs) > 0 {
@@ -108,17 +108,17 @@ func (r *SplunkOtelAgent) validateCRDSpec() error {
 	return nil
 }
 
-func (r *SplunkOtelAgent) validateCRDAgentSpec() error {
+func (r *SplunkOtelAgent) ValidateCRDAgentSpec() error {
 	spec := r.Spec.Agent
 
 	if spec.Replicas != nil {
-		return fmt.Errorf("`replicas` is not supported by clusterReceiver")
+		return fmt.Errorf("`replicas` is not supported by agent")
 	}
 
 	return nil
 }
 
-func (r *SplunkOtelAgent) validateCRDClusterReceiverSpec() error {
+func (r *SplunkOtelAgent) ValidateCRDClusterReceiverSpec() error {
 	spec := r.Spec.ClusterReceiver
 
 	if spec.Replicas != nil {
@@ -132,7 +132,7 @@ func (r *SplunkOtelAgent) validateCRDClusterReceiverSpec() error {
 	return nil
 }
 
-func (r *SplunkOtelAgent) validateCRDGatewaySpec() error {
+func (r *SplunkOtelAgent) ValidateCRDGatewaySpec() error {
 	spec := r.Spec.Gateway
 
 	if !r.Spec.Gateway.Disabled {
@@ -140,7 +140,7 @@ func (r *SplunkOtelAgent) validateCRDGatewaySpec() error {
 	}
 
 	if spec.HostNetwork {
-		return fmt.Errorf("`hostNetwork` cannot be true for clusterReceiver")
+		return fmt.Errorf("`hostNetwork` cannot be true for gateway")
 	}
 
 	return nil

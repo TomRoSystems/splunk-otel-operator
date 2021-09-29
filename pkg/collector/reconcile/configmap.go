@@ -39,25 +39,16 @@ func ConfigMaps(ctx context.Context, params Params) error {
 	desired := []corev1.ConfigMap{}
 
 	if !params.Instance.Spec.Agent.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Agent.Config, v1alpha1.KindAgent); err == nil {
-			desired = append(desired, cm)
-		} else {
-			return err
-		}
+		cm := desiredConfigMap(ctx, params, params.Instance.Spec.Agent.Config, v1alpha1.KindAgent)
+		desired = append(desired, cm)
 	}
 	if !params.Instance.Spec.ClusterReceiver.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.ClusterReceiver.Config, v1alpha1.KindClusterReceiver); err == nil {
-			desired = append(desired, cm)
-		} else {
-			return err
-		}
+		cm := desiredConfigMap(ctx, params, params.Instance.Spec.ClusterReceiver.Config, v1alpha1.KindClusterReceiver)
+		desired = append(desired, cm)
 	}
 	if !params.Instance.Spec.Gateway.Disabled {
-		if cm, err := desiredConfigMap(ctx, params, params.Instance.Spec.Gateway.Config, v1alpha1.KindGateway); err == nil {
-			desired = append(desired, cm)
-		} else {
-			return err
-		}
+		cm := desiredConfigMap(ctx, params, params.Instance.Spec.Gateway.Config, v1alpha1.KindGateway)
+		desired = append(desired, cm)
 	}
 
 	// first, handle the create/update parts
@@ -73,7 +64,7 @@ func ConfigMaps(ctx context.Context, params Params) error {
 	return nil
 }
 
-func desiredConfigMap(_ context.Context, params Params, config, kind string) (corev1.ConfigMap, error) {
+func desiredConfigMap(_ context.Context, params Params, config, kind string) corev1.ConfigMap {
 	name := naming.ConfigMap(params.Instance, kind)
 	labels := collector.Labels(params.Instance)
 	labels["app.kubernetes.io/name"] = name
@@ -88,7 +79,7 @@ func desiredConfigMap(_ context.Context, params Params, config, kind string) (co
 		Data: map[string]string{
 			"collector.yaml": config,
 		},
-	}, nil
+	}
 }
 
 func expectedConfigMaps(ctx context.Context, params Params, expected []corev1.ConfigMap, retry bool) error {
