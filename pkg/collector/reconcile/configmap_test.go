@@ -124,16 +124,12 @@ func TestExpectedConfigMap(t *testing.T) {
 	t.Run("should create collector config maps", func(t *testing.T) {
 		p1 := params()
 		agentMap := desiredConfigMap(context.Background(), p1, p1.Instance.Spec.Agent.Config, "agent")
-		err := p1.Instance.ValidateCRDAgentSpec()
-		assert.NoError(t, err)
 
 		p2 := params()
 		crMap := desiredConfigMap(context.Background(), p2, p2.Instance.Spec.ClusterReceiver.Config, "clusterreceiver")
-		err = p1.Instance.ValidateCRDClusterReceiverSpec()
-		assert.NoError(t, err)
 
 		p3 := params()
-		err = expectedConfigMaps(context.Background(), p3, []v1.ConfigMap{agentMap, crMap}, true)
+		err := expectedConfigMaps(context.Background(), p3, []v1.ConfigMap{agentMap, crMap}, true)
 		assert.NoError(t, err)
 
 		exists, err := populateObjectIfExists(t, &v1.ConfigMap{}, types.NamespacedName{Namespace: "default", Name: "test-collector"})
