@@ -3,5 +3,5 @@ kind: Secret
 metadata:
   name: splunk-access-token
 type: Opaque
-data:
-  access-token: MDEyMzQ1Njc4OS0tMTIzNDU2Ny0xMg==
+stringData:
+  access-token: 0123456789--1234567-12

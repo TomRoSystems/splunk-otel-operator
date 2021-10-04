@@ -28,7 +28,7 @@ import (
 	"github.com/signalfx/splunk-otel-operator/internal/config"
 )
 
-func TestDefaultConfigMap(t *testing.T) {
+func TestDesiredConfigMap(t *testing.T) {
 	expectedLables := map[string]string{
 		"app.kubernetes.io/managed-by": "splunk-otel-operator",
 		"app.kubernetes.io/instance":   "default.test",
@@ -74,52 +74,6 @@ service:
 	})
 }
 
-func TestDesiredConfigMap(t *testing.T) {
-	expectedLables := map[string]string{
-		"app.kubernetes.io/managed-by": "splunk-otel-operator",
-		"app.kubernetes.io/instance":   "default.test",
-		"app.kubernetes.io/part-of":    "opentelemetry",
-	}
-
-	t.Run("should return expected collector config map", func(t *testing.T) {
-		expectedLables["app.kubernetes.io/component"] = "splunk-otel-collector"
-		expectedLables["app.kubernetes.io/name"] = "test-collector"
-
-		expectedData := map[string]string{
-			"collector.yaml": `processors:
-receivers:
-  jaeger:
-    protocols:
-      grpc:
-  prometheus:
-    config:
-      scrape_configs:
-        job_name: otel-collector
-        scrape_interval: 10s
-        static_configs:
-          - targets: [ '0.0.0.0:8888', '0.0.0.0:9999' ]
-
-exporters:
-  logging:
-
-service:
-  pipelines:
-    metrics:
-      receivers: [prometheus]
-      processors: []
-      exporters: [logging]`,
-		}
-
-		p := params()
-		actual := desiredConfigMap(context.Background(), p, p.Instance.Spec.Agent.Config, "agent")
-
-		assert.Equal(t, "test-collector", actual.Name)
-		assert.Equal(t, expectedLables, actual.Labels)
-		assert.Equal(t, expectedData, actual.Data)
-
-	})
-}
-
 func TestExpectedConfigMap(t *testing.T) {
 	t.Run("should create collector config maps", func(t *testing.T) {
 		p1 := params()
@@ -132,7 +86,7 @@ func TestExpectedConfigMap(t *testing.T) {
 		err := expectedConfigMaps(context.Background(), p3, []v1.ConfigMap{agentMap, crMap}, true)
 		assert.NoError(t, err)
 
-		exists, err := populateObjectIfExists(t, &v1.ConfigMap{}, types.NamespacedName{Namespace: "default", Name: "test-collector"})
+		exists, err := populateObjectIfExists(t, &v1.ConfigMap{}, types.NamespacedName{Namespace: "default", Name: "test-agent"})
 
 		assert.NoError(t, err)
 		assert.True(t, exists)
@@ -159,7 +113,7 @@ func TestExpectedConfigMap(t *testing.T) {
 			Recorder: record.NewFakeRecorder(10),
 		}
 		cm := desiredConfigMap(context.Background(), param, param.Instance.Spec.Agent.Config, "agent")
-		createObjectIfNotExists(t, "test-collector", &cm)
+		createObjectIfNotExists(t, "test-agent", &cm)
 
 		p := params()
 		desired := desiredConfigMap(context.Background(), p, p.Instance.Spec.Agent.Config, "agent")
@@ -168,7 +122,7 @@ func TestExpectedConfigMap(t *testing.T) {
 		assert.NoError(t, err)
 
 		actual := v1.ConfigMap{}
-		exists, err := populateObjectIfExists(t, &actual, types.NamespacedName{Namespace: "default", Name: "test-collector"})
+		exists, err := populateObjectIfExists(t, &actual, types.NamespacedName{Namespace: "default", Name: "test-agent"})
 
 		assert.NoError(t, err)
 		assert.True(t, exists)
