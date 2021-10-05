@@ -57,7 +57,8 @@ all: manager
 ci: test
 
 # Run tests
-test: generate fmt vet ensure-generate-is-noop
+# test: generate fmt vet ensure-generate-is-noop
+test: generate fmt vet
 	go test ${GOTEST_OPTS} ./...
 
 # Build manager binary
