@@ -11,12 +11,15 @@ linters-settings:
     suggest-new: true
   misspell:
     locale: US
+  # TODO: please enable in beta stage once we know all configuration fields
+  # govet:
+  #  enable:
+  #    - fieldalignment
 
 linters:
   enable:
     - goheader
     - goimports
-    # - fieldalignment
     - misspell
     - gosec
     - exhaustive
