@@ -74,6 +74,10 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
+lint: # Run go lint against code
+	golangci-lint run
+
+
 ci: generate ensure-generate-is-noop fmt vet test
 
 ENVTEST_ASSETS_DIR=$(shell pwd)/testbin
