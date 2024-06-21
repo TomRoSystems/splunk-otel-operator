@@ -107,7 +107,7 @@ func (r *SplunkOtelAgent) validateCRDAgentSpec() error {
 	spec := r.Spec.Agent
 
 	if spec.Replicas != nil {
-		return fmt.Errorf("`replicas` is not supported by clusterReceiver")
+		return fmt.Errorf("`replicas` is not supported by agent")
 	}
 
 	return nil
@@ -135,7 +135,7 @@ func (r *SplunkOtelAgent) validateCRDGatewaySpec() error {
 	}
 
 	if spec.HostNetwork {
-		return fmt.Errorf("`hostNetwork` cannot be true for clusterReceiver")
+		return fmt.Errorf("`hostNetwork` cannot be true for gateway")
 	}
 
 	return nil
